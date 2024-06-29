@@ -59,20 +59,36 @@ update_masked_word <- function(word, masked_word, guess) {
 while (TRUE) {
   print(paste(masked_word, collapse = " "))
   cont3 <- readline(prompt = "Guess a letter: ")
-  cont3 <- to lower(cont3) # Change all letters to lower case 
- 
+  cont3 <- tolower(cont3)  # Change all letters to lower case 
+  
   if (cont3 %in% guessed_letters) {
     print("You already guessed that! Try again")
-    print(paste(masked_word, collapse = " "))
     next
+  } 
+  
+  guessed_letters <- c(guessed_letters, cont3)
+  
+  match <- grepl(cont3, word, ignore.case = TRUE)  # Check if the guessed letter is in the word
+  
+  if (any(match)) {
+    masked_word <- update_masked_word(word, masked_word, cont3)
+    print("You got it!")
   } else {
-    print("Not quite! You have 2 tries left.") 
+    lives <- lives - 1
+    print(paste("Not quite! You have", lives, "tries left. Try again."))
+  } 
+  
+  if (!("_" %in% masked_word)) {
+    print("Congrats! You guessed the word!")
+    break
+  } else if (lives == 0) {
+    print(paste("You ran out of tries! The word was:", word))
+    break
   }
-} 
+}
 
 
 
 # DIFFICLUTY LEVELS
 # ACTUAL HANGMAN 
-
-
+# print plot of a cat as celebration
