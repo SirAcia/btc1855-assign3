@@ -14,7 +14,8 @@
 # If yes, let user know and how many tries they have left
 # If not, let user know and how many tries they have left
 # If they ran out of tries, exit program
-library(ggplot2)
+
+# Please download the assign3-wordlist.txt file from my repo :)
 
 # Welcome and instructions
 intro <- function() {
@@ -24,82 +25,124 @@ intro <- function() {
       cat("The game of hangman is very simple...\n",
           "We will choose a word for you.\n",
           "Guess one letter at a time.\n",
-         "You have three lives before the hangman gets 'hanged'!\n")
+         "Depending on your difficulty level, you have\n",
+         "a couple tries before you get hanged'!\n")
       break
     } else {
       print("Come on, don't leave me hanging! Press 'R' to get started.") 
     }
   } 
 }
-        
+
 game <- function() {
-    update_masked_word <- function(word, masked_word, guess) {
+  update_masked_word <- function(word, masked_word, guess) {
     word <- unlist(strsplit(tolower(word), ""))  # Ensure word is split into characters
-    for (i in seq_along(word)) {
-      if (word[i] == guess) {
+    for (i in seq_along(word)) { # Iterate along the sequence of the word 
+      if (word[i] == guess) { # If the guess matches a letter, update masked word
         masked_word[i] <- word[i]
       }
     }
     return(masked_word)
   }
-
+  
   # Load word list and select a word
   while (TRUE) {
     cont2 <- readline(prompt = "Click R to continue: ")
-    if (cont2 == "R" | cont2 == "r") {
-      wordlist <- read.delim("assign3-wordlist.txt", header = FALSE)
-      word <- sample(wordlist$V1, 1)
+    if (cont2 == "R" | cont2 == "r") { # Accept either lower or upper case "R"
+      cat("Easy: 1\n",
+          "Medium: 2\n",
+          "Hard: 3\n")
+      diff <- readline(prompt = "Choose a difficulty level: ")    
+      wordlist <- as.character(read.delim("assign3-wordlist.txt", header = FALSE)$V1)
+      
+      if (diff == "1") {
+        easy <- wordlist[nchar(wordlist) >= 2 & nchar(wordlist) <= 5]
+        word <- sample(easy, 1)
+        cat("You chose easy!\n")
+        cat("You have 8 lives.\n")
+      } else if (diff == "2") {
+        med <- wordlist[nchar(wordlist) >= 6 & nchar(wordlist) <= 8]
+        word <- sample(med, 1)
+        cat("Medium it is!\n")
+        cat("You have 10 lives.\n")
+      } else if (diff == "3") {
+        hard <- wordlist[nchar(wordlist) >= 9]
+        word <- sample(hard, 1)
+        cat("You chose hard! Looks like you want a challenge.\n")
+        cat("You have 15 lives.\n")
+      } else {
+        print("Invalid selection. Let's try easy!")
+        easy <- wordlist[nchar(wordlist) >= 2 & nchar(wordlist) <= 5]
+        word <- sample(easy, 1)
+      }
+      
       masked_word <- rep("_", nchar(word))
-      lives <- 3
+      if (diff == "1") {
+        lives <- 8
+      } else if (diff == "2") {
+        lives <- 12
+      } else if (diff == "3") {
+        lives <- 15
+      } else {
+        lives <- 8
+      }
       guessed_letters <- character()
       print(paste("Your word has", nchar(word), "characters!"))
       break
     } else {
       print("Oops! Are you sure you pressed the right button?") 
     }
-  } 
+  }
   
-# Game loop
+  # Game loop
   while (TRUE) {
     print(paste(masked_word, collapse = " "))
     cont3 <- readline(prompt = "Guess a letter or a word: ")
     cont3 <- tolower(cont3)  # Change all letters to lower case 
     
-    if (nchar(cont3) != 1 && nchar(cont3) != nchar(word)) {
+    if (nchar(cont3) != 1 && nchar(cont3) != nchar(word)) { # If the entry is not a single letter or word that is the same length
       print("Please enter a single letter or guess a word.")
       next
     }
     
-    if (cont3 %in% guessed_letters) {
+    if (cont3 %in% guessed_letters) { # No repeat guesses
       print("You already guessed that! Try again.")
       next
     } 
     
     guessed_letters <- c(guessed_letters, cont3)
     
-    if (nchar(cont3) == nchar(word)) { #??
-      if (cont3 == word) {
-        masked_word <- strsplit(word, "")[[1]]
+    if (nchar(cont3) == nchar(word)) { # Check if guessed word is same length
+      if (cont3 == word) { # Check if guess is the word
+        masked_word <- strsplit(word, "")[[1]] # Show all correct letters in the masked word
         print("Congrats! You guessed the word!")
         break
       } else {
         lives <- lives - 1
-        print(paste("Not quite! You have", lives, "tries left. Try again."))
+        if (lives != 1) {
+          print(paste("Not quite! You have", lives, "tries left. Try again."))
+        } else {
+          print("Not quite! You have 1 try left. Try again.") # Grammar for singular try
+        }
       }
     } else {
       match <- grepl(cont3, word, ignore.case = TRUE)  # Check if the guessed letter is in the word
       
       if (any(match)) {
-        masked_word <- update_masked_word(word, masked_word, cont3)
+        masked_word <- update_masked_word(word, masked_word, cont3) # If guessed letter is in word, display in masked word
         print("You got it!")
       } else {
         lives <- lives - 1
-        print(paste("Not quite! You have", lives, "tries left. Try again."))
+        if (lives != 1) {
+          print(paste("Not quite! You have", lives, "tries left. Try again."))
+        } else {
+          print("Not quite! You have 1 try left. Try again.") # Grammar for singular try
+        }
       }
     }
     
     if (!("_" %in% masked_word)) {
-      print("Congrats! You guessed the word!")
+      print(paste("Congrats! You guessed the word:", word))
       break
     } else if (lives == 0) {
       print(paste("You ran out of tries! The word was:", word))
@@ -108,7 +151,8 @@ game <- function() {
   }
 }
 
-repeat {
+
+repeat { # Loop to repeat game at the end 
   intro()
   game()
   restart <- readline(prompt = "Do you want to play again? (Y/N): ")
@@ -117,9 +161,4 @@ repeat {
     break
   }
 }
-
-# DIFFICLUTY LEVELS
-# ACTUAL HANGMAN 
-# print plot of a cat as celebration
-# add a prompt to restart the game 
 
