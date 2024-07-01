@@ -177,14 +177,17 @@ game <- function() {
   }
 }
 
-repeat { 
+repeat {
   intro()
   game()
   
   restart <- readline(prompt = "Do you want to play again? (Y/N): ")
-  # If user doesn't choose Y
-  if (tolower(restart) != "y") {
+  
+  if (tolower(restart) == "y") {
+  } else if (tolower(restart) == "n") {
     print("Thank you for hanging out! Have a nice day :)")
-    break
+    break 
+  } else {
+    print("Invalid input. Please enter Y or N.")
   }
 }
