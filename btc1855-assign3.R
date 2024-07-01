@@ -20,79 +20,93 @@
 # Welcome and instructions
 intro <- function() {
   while (TRUE) {
-  cont <- readline(prompt = "Welcome to hangman! Click R to continue: ")
+  cont <- readline(prompt = "Welcome to hangman! Enter R to continue: ")
+  # Accept either lower or upper case "R"
   if (cont == "R" | cont == "r") {
-      cat("The game of hangman is very simple...\n",
-          "We will choose a word for you.\n",
-          "Guess one letter at a time.\n",
-         "Depending on your difficulty level, you have\n",
-         "a couple tries before you get hanged'!\n")
+      cat("The game of hangman is very simple...\n")
+      cat("We will choose a word for you.\n")
+      cat("Guess one letter at a time.\n")
+      cat("Depending on your difficulty level, you have\n")
+      cat("a couple tries before you get hanged!\n")
       break
     } else {
-      print("Come on, don't leave me hanging! Press 'R' to get started.") 
+      print("Come on, don't leave me hanging! Enter 'R' to get started.") 
     }
   } 
 }
 
 game <- function() {
   update_masked_word <- function(word, masked_word, guess) {
-    word <- unlist(strsplit(tolower(word), ""))  # Ensure word is split into characters
-    for (i in seq_along(word)) { # Iterate along the sequence of the word 
-      if (word[i] == guess) { # If the guess matches a letter, update masked word
+    # Ensure word is split into each character and in lower case
+    word <- unlist(strsplit(tolower(word), ""))  
+    # Iterate along the sequence of the word 
+    for (i in seq_along(word)) { 
+      # If the guess matches a letter, replace masked letter with the match
+      if (word[i] == guess) { 
         masked_word[i] <- word[i]
       }
     }
+    # Display the updated masked word with matches
     return(masked_word)
   }
   
-  # Load word list and select a word
   while (TRUE) {
-    cont2 <- readline(prompt = "Click R to continue: ")
-    if (cont2 == "R" | cont2 == "r") { # Accept either lower or upper case "R"
-      cat("Easy: 1\n",
-          "Medium: 2\n",
-          "Hard: 3\n")
+    cont2 <- readline(prompt = "Enter R to continue: ")
+    if (cont2 == "R" | cont2 == "r") { 
+      cat("Easy: 1\n")
+      cat("Medium: 2\n")
+      cat("Hard: 3\n")
       diff <- readline(prompt = "Choose a difficulty level: ")    
-      wordlist <- as.character(read.delim("assign3-wordlist.txt", header = FALSE)$V1)
-      
+      # Load the wordlist file and access the column with words
+      # We do not have a header row so header = FALSE
+      wordlist <- read.delim("assign3-wordlist.txt", header = FALSE)$V1
+      # Define length of characters for each difficulty level and tell
+      # player how many lives/tries they have per level
       if (diff == "1") {
         easy <- wordlist[nchar(wordlist) >= 2 & nchar(wordlist) <= 5]
         word <- sample(easy, 1)
         cat("You chose easy!\n")
         cat("You have 8 lives.\n")
+        lives <- 8
       } else if (diff == "2") {
         med <- wordlist[nchar(wordlist) >= 6 & nchar(wordlist) <= 8]
         word <- sample(med, 1)
         cat("Medium it is!\n")
-        cat("You have 10 lives.\n")
+        cat("You have 12 lives.\n")
+        lives <- 12
       } else if (diff == "3") {
         hard <- wordlist[nchar(wordlist) >= 9]
         word <- sample(hard, 1)
         cat("You chose hard! Looks like you want a challenge.\n")
         cat("You have 15 lives.\n")
+        lives <- 15
       } else {
+        # If they choose anything other than 1-3, we will choose easy for them
         print("Invalid selection. Let's try easy!")
         easy <- wordlist[nchar(wordlist) >= 2 & nchar(wordlist) <= 5]
         word <- sample(easy, 1)
+        lives <- 8
       }
       
-      masked_word <- rep("_", nchar(word))
-      if (diff == "1") {
-        lives <- 8
-      } else if (diff == "2") {
-        lives <- 12
-      } else if (diff == "3") {
-        lives <- 15
-      } else {
-        lives <- 8
+      cont2 <- readline(prompt = "Enter R to begin: ")
+      while (TRUE) {
+        if (cont2 == "R" | cont2 == "r") {
+          # Display the masked word (_ _ _ _) based on number of characters for user
+          masked_word <- rep("_", nchar(word))
+          # Create an empty character vector to store all the guessed letters
+          guessed_letters <- character()
+          print(paste("Your word has", nchar(word), "characters!"))
+          break
+        } else {
+          # If user doesn't enter R to continue
+          print("Oops! Are you sure you entered the right key?") 
+        }
       }
-      guessed_letters <- character()
-      print(paste("Your word has", nchar(word), "characters!"))
       break
     } else {
-      print("Oops! Are you sure you pressed the right button?") 
-    }
-  }
+      print("Oops! Are you sure you entered the right key?") 
+    } 
+  } # Enter R to continue
   
   # Game loop
   while (TRUE) {
@@ -157,7 +171,7 @@ repeat { # Loop to repeat game at the end
   game()
   restart <- readline(prompt = "Do you want to play again? (Y/N): ")
   if (tolower(restart) != "y") {
-    print("Thank you for playing! Goodbye!")
+    print("Thank you for hanging out! Have a nice day :)")
     break
   }
 }
