@@ -3,8 +3,8 @@
 # CRYSTAL LEE
 # Version 2024.04.2+764 
 
-# Please download the assign3-wordlist.txt file from my repo :)
-# Click source to begin/restart after exiting the game
+# Please ensure the assign3-wordlist.txt file is downloaded from my repo :)
+# Click source to begin the game/restart after exiting the game
 
 # Welcome and instructions
 # Create function to run introductory instructions
