@@ -3,23 +3,13 @@
 # CRYSTAL LEE
 # Version 2024.04.2+764 
 
-# Make text file with words - 
-# Choose a random word from the list - 
-# Inform user how many letters are in the word
-# Decide how many tries the person can have
-# Ask user for input
-# Make sure the input is one character
-# Make sure both capital and lowercase are treated equally
-# Check if the letter is included
-# If yes, let user know and how many tries they have left
-# If not, let user know and how many tries they have left
-# If they ran out of tries, exit program
-
 # Please download the assign3-wordlist.txt file from my repo :)
-# Click source to begin
+# Click source to begin/restart after exiting the game
 
 # Welcome and instructions
+# Create function to run introductory instructions
 intro <- function() {
+  # While loop runs the loop infinitely until there is a break
   while (TRUE) {
   cont <- readline(prompt = "Welcome to hangman! Enter R to continue: ")
   # Accept either lower or upper case "R"
@@ -37,6 +27,7 @@ intro <- function() {
 }
 
 game <- function() {
+  # Create function to update masked word every time there is a correct guess
   update_masked_word <- function(word, masked_word, guess) {
     # Ensure word is split into each character and in lower case
     word <- unlist(strsplit(tolower(word), ""))  
@@ -177,6 +168,7 @@ game <- function() {
   }
 }
 
+# Give user option to repeat game or exit
 repeat {
   intro()
   game()
@@ -186,8 +178,9 @@ repeat {
   if (tolower(restart) == "y") {
   } else if (tolower(restart) == "n") {
     print("Thank you for hanging out! Have a nice day :)")
-    break 
+    break # Exit out of game
   } else {
+    # If user chooses something other than Y or N
     print("Invalid input. Please enter Y or N.")
   }
 }
