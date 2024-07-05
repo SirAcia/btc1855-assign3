@@ -3,6 +3,14 @@
 # CRYSTAL LEE
 # Version 2024.04.2+764 
 
+# Code review completed by Zachery Chan, comments indicated by ZC 
+# ZC - Overall, I thought your hangman game was very fun, well structured, 
+#' clean, and loved the game's details/extras! The only things I noticed was that 
+#' it would be nice if your code provided an output of incorrect letters after each guess
+#' and that it could have some more comments to outline what is beign done to which variables, sometimes hard to keep track.
+#' But, I think these things are very minor!  
+#' Nice work :) 
+
 # Please ensure the assign3-wordlist.txt file is downloaded from my repo :)
 # Click source to begin the game/restart after exiting the game
 
@@ -13,13 +21,16 @@ intro <- function() {
   while (TRUE) {
   cont <- readline(prompt = "Welcome to hangman! Enter R to continue: ")
   # Accept either lower or upper case "R"
+  # ZC - Nice use of conditionals here, thought it was much more complicated, nice to see that it is super clean and simple
   if (cont == "R" | cont == "r") {
       cat("The game of hangman is very simple...\n")
       cat("We will choose a word for you.\n")
       cat("Guess one letter at a time.\n")
       cat("Depending on your difficulty level, you have\n")
       cat("a couple tries before you get hanged!\n")
+      # ZC - Really love the difficulty settings! Makes the game super fun + the fun messages are great as well 
       break
+      
     } else {
       print("Come on, don't leave me hanging! Enter 'R' to get started.") 
     }
@@ -29,7 +40,8 @@ intro <- function() {
 game <- function() {
   # Function to update masked word every time there is a correct guess
   update_masked_word <- function(word, masked_word, guess) {
-    word <- unlist(strsplit(tolower(word), ""))  
+    word <- unlist(strsplit(tolower(word), "")) 
+    # ZC - Like the use of unlist here, simplifies code to one line rather than having to drill down 
     for (i in seq_along(word)) { 
       if (word[i] == guess) { 
         masked_word[i] <- word[i]
@@ -41,6 +53,7 @@ game <- function() {
   while (TRUE) {
     cont2 <- readline(prompt = "Enter R to continue: ")
     if (cont2 == "R" | cont2 == "r") { 
+      #ZC - if this ever comes up again, try using the toupper() function, then yopu dont have to incase in if statements 
       cat("Easy: 1\n")
       cat("Medium: 2\n")
       cat("Hard: 3\n")
@@ -50,6 +63,7 @@ game <- function() {
       
       if (diff == "1") {
         easy <- wordlist[nchar(wordlist) >= 2 & nchar(wordlist) <= 5]
+        #ZC - why set nchar(wordlist) >= 2, you never want to use the first word "go"? 
         word <- sample(easy, 1)
         cat("You chose easy!\n")
         cat("You have 8 lives.\n")
@@ -71,7 +85,7 @@ game <- function() {
         easy <- wordlist[nchar(wordlist) >= 2 & nchar(wordlist) <= 5]
         word <- sample(easy, 1)
         lives <- 8
-      }
+      } # ZC - nice 'idiot-proofing' here
       
       while (TRUE) {
         cont2 <- readline(prompt = "Enter R to begin: ")
@@ -82,12 +96,12 @@ game <- function() {
           break 
         } else {
           print("Oops! Are you sure you entered the right key?") 
-        }
+        }# ZC - nice 'idiot-proofing' here
       }
       break
     } else {
       print("Oops! Are you sure you entered the right key?")
-    }
+    }# ZC - nice 'idiot-proofing' here
   }
   
   while (TRUE) {
@@ -122,7 +136,7 @@ game <- function() {
       }
     } else {
       match <- grepl(cont3, word, ignore.case = TRUE) 
-      
+      #ZC - nice use of grepl here, makes finding matches easier than trying with logicals
       if (any(match)) {
         masked_word <- update_masked_word(word, masked_word, cont3) 
         print("You got it!")
@@ -152,7 +166,7 @@ repeat {
   game()
   
   restart <- readline(prompt = "Do you want to play again? (Y/N): ")
-  
+  #ZC - This detail was super cool
   if (tolower(restart) == "y") {
   } else if (tolower(restart) == "n") {
     print("Thank you for hanging out! Have a nice day :)")
