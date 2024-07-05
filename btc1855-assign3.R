@@ -7,9 +7,9 @@
 # ZC - Overall, I thought your hangman game was very fun, well structured, 
 #' clean, and loved the game's details/extras! The only things I noticed was that 
 #' it would be nice if your code provided an output of incorrect letters after each guess
-#' and that it could have some more comments to outline what is beign done to which variables, sometimes hard to keep track.
+#' and that it could have some more comments to outline what is being done to which variables, sometimes hard to keep track.
 #' But, I think these things are very minor!  
-#' Nice work :) 
+#' Nice work :).
 
 # Please ensure the assign3-wordlist.txt file is downloaded from my repo :)
 # Click source to begin the game/restart after exiting the game
